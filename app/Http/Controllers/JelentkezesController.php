@@ -69,8 +69,18 @@ class JelentkezesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Jelentkezes $id)
     {
-        //
+        if (!$id) {
+            return response()->json("Nincs ilyen jelentkezés!");
+        }
+
+        $tura = Tura::find($id->tura_id);
+
+        $tura->increment('elerheto_hely', $id->letszam);
+
+        $id->delete();
+
+        return response()->json(["uzenet" => "Jelentkezés törölve"],200,options:JSON_UNESCAPED_UNICODE);
     }
 }
